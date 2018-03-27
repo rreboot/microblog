@@ -1,10 +1,7 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <h1>Трололошеньки..</h1>
-    <p>Что-то с сервером не так,</p>
-    <p>Выдал он ошибку,</p>
-    <p>Но исправим мы косяк,</p>
-    <p>Не ругайте шибко..</p>
-    <p><a href="{{ url_for('index') }}">Назад</a></p>
+    <h1>{{ _('An unexpected error has occurred') }}</h1>
+    <p>{{ _('The administrator has been notified. Sorry for the inconvenience!') }}</p>
+    <p><a href="{{ url_for('index') }}">{{ _('Back') }}</a></p>
 {% endblock %}

@@ -1,11 +1,13 @@
+#!/usr/bin/env python
 from datetime import datetime, timedelta
 import unittest
 from app import app, db
 from app.models import User, Post
 
+
 class UserModelCase(unittest.TestCase):
     def setUp(self):
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
         db.create_all()
 
     def tearDown(self):
@@ -58,24 +60,24 @@ class UserModelCase(unittest.TestCase):
         # create four posts
         now = datetime.utcnow()
         p1 = Post(body="post from john", author=u1,
-            timestamp=now + timedelta(seconds=1))
+                  timestamp=now + timedelta(seconds=1))
         p2 = Post(body="post from susan", author=u2,
-            timestamp=now + timedelta(seconds=4))
+                  timestamp=now + timedelta(seconds=4))
         p3 = Post(body="post from mary", author=u3,
-            timestamp=now + timedelta(seconds=3))
+                  timestamp=now + timedelta(seconds=3))
         p4 = Post(body="post from david", author=u4,
-            timestamp=now + timedelta(seconds=2))
+                  timestamp=now + timedelta(seconds=2))
         db.session.add_all([p1, p2, p3, p4])
         db.session.commit()
 
         # setup the followers
-        u1.follow(u2)
-        u1.follow(u4)
-        u2.follow(u3)
-        u3.follow(u4)
+        u1.follow(u2)  # john follows susan
+        u1.follow(u4)  # john follows david
+        u2.follow(u3)  # susan follows mary
+        u3.follow(u4)  # mary follows david
         db.session.commit()
 
-        #check the followed posts of each user
+        # check the followed posts of each user
         f1 = u1.followed_posts().all()
         f2 = u2.followed_posts().all()
         f3 = u3.followed_posts().all()
@@ -84,6 +86,7 @@ class UserModelCase(unittest.TestCase):
         self.assertEqual(f2, [p2, p3])
         self.assertEqual(f3, [p3, p4])
         self.assertEqual(f4, [p4])
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
